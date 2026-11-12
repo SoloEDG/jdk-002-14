@@ -1,7 +1,14 @@
 import type { Note, Track } from "./chart";
 export type Phase = "ready" | "playing" | "paused" | "finished";
 export type Grade = "PERFECT" | "GREAT" | "GOOD" | "MISS";
-export type Hit = { noteId: string; grade: Grade; delta: number; beat: number };
+export type Hit = {
+  noteId: string;
+  grade: Grade;
+  delta: number;
+  beat: number;
+  /** 长按尾判松手误差（秒）；普通音符与旧记录无此字段 */
+  tailDelta?: number;
+};
 export type Run = {
   id: string;
   track: Track;

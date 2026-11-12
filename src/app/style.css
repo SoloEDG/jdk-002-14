@@ -658,6 +658,51 @@ main {
   background: #a999ff;
   border-color: #ddd5ff;
 }
+.note.tail-cue {
+  border-color: #ffe08a;
+  box-shadow: 0 0 14px #ffd166aa;
+  animation: tail-cue-pulse 0.5s ease-in-out infinite alternate;
+}
+@keyframes tail-cue-pulse {
+  from {
+    box-shadow: 0 0 6px #ffd16666;
+  }
+  to {
+    box-shadow: 0 0 18px #ffd166dd;
+  }
+}
+.release-cue {
+  position: absolute;
+  top: 320px;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  text-align: center;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: release-cue-blink 0.6s ease-in-out infinite alternate;
+}
+.release-cue strong {
+  font-size: 18px;
+  letter-spacing: 6px;
+  color: #ffd166;
+  text-shadow: 0 0 16px #ffd16688;
+}
+.release-cue span {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #c8b574;
+}
+@keyframes release-cue-blink {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .judgment-float {
   position: absolute;
   top: 48%;
@@ -674,6 +719,26 @@ main {
 .judgment-float strong {
   letter-spacing: 4px;
   font-size: 15px;
+}
+.judgment-float strong.perfect {
+  color: #bcf366;
+}
+.judgment-float strong.great {
+  color: #a999ff;
+}
+.judgment-float strong.good {
+  color: #79bfff;
+}
+.judgment-float strong.miss {
+  color: #e2877b;
+}
+.judgment-deltas {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #c6cad1;
 }
 .judgment-float > span {
   font-size: 30px;

@@ -4,6 +4,8 @@ import type { Track, Lane } from "../../../shared/chart";
 import type { Phase, Run } from "../../../shared/session";
 import { laneLabels } from "../../../shared/chart";
 import { noteY, tailHeight, visibleNotes } from "../lib/geometry";
+import { formatDelta } from "../../judgment/lib/rules";
+import type { LastJudgment } from "../../judgment/model/useJudgment";
 const props = defineProps<{
   track: Track;
   run: Run | null;
@@ -11,7 +13,8 @@ const props = defineProps<{
   phase: Phase;
   done: Set<string>;
   held: Set<Lane>;
-  feedback: string;
+  lastJudgment: LastJudgment | null;
+  releaseNotes: Set<string>;
   combo: number;
 }>();
 defineEmits<{ down: [lane: Lane]; up: [lane: Lane] }>();
@@ -53,6 +56,7 @@ const notes = computed(() =>
         :class="{
           'hold-note': n.duration > 0,
           'chord-note': n.lanes.length > 1,
+          'tail-cue': releaseNotes.has(n.id),
         }"
         :style="{
           left: lane * 25 + 2 + '%',
@@ -67,9 +71,25 @@ const notes = computed(() =>
         <b>{{ laneLabels[lane] }}</b>
       </div></template
     >
-    <div v-if="phase === 'playing'" class="judgment-float">
-      <strong>{{ feedback }}</strong
-      ><span v-if="combo > 1">{{ combo }}<small> COMBO</small></span>
+    <div
+      v-if="phase === 'playing' && releaseNotes.size"
+      class="release-cue"
+      role="status"
+    >
+      <strong>松开 RELEASE</strong><span>尾部判定窗口已开启（±150ms）</span>
+    </div>
+    <div v-if="phase === 'playing' && lastJudgment" class="judgment-float">
+      <strong :class="lastJudgment.grade.toLowerCase()">
+        {{ lastJudgment.grade }}
+      </strong>
+      <div
+        v-if="lastJudgment.tailDelta !== undefined"
+        class="judgment-deltas"
+      >
+        <span>起 {{ formatDelta(lastJudgment.headDelta) }}</span>
+        <span>尾 {{ formatDelta(lastJudgment.tailDelta) }}</span>
+      </div>
+      <span v-if="combo > 1">{{ combo }}<small> COMBO</small></span>
     </div>
     <div class="hit-line"></div>
     <div class="receptors">
